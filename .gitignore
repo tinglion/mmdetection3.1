@@ -121,3 +121,8 @@ work_dirs/
 *.pth
 *.py~
 *.sh~
+
+
+# custom2
+rtmdet_data/*
+outputs/*
