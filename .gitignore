@@ -126,3 +126,4 @@ work_dirs/
 # custom2
 rtmdet_data/*
 outputs/*
+output/*

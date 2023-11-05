@@ -107,7 +107,7 @@ custom_hooks = [
 ]
 
 # load COCO pre-trained weight
-load_from = "./checkpoints/rtmdet_m_8xb32-300e_coco_20220719_112220-229f527c.pth"
+load_from = "../mmdet_checkpoints/rtmdet_m_8xb32-300e_coco_20220719_112220-229f527c.pth"
 
 train_cfg = dict(type="EpochBasedTrainLoop", max_epochs=max_epochs, val_interval=1)
 visualizer = dict(

@@ -2,11 +2,12 @@
 
 ## TODO
 
-* 下载v3det数据
-* 训练数据生成增加模糊、变色等效果，并训练large模型
+* rtm训练道具模型
 
 * 普适标签组合模型
-* rtm训练道具模型
+* 3个模型接入labelstadio
+* 工程化，补充标注数据，labelstudio一键训练
+* 效率优化
 
 ## overview
 

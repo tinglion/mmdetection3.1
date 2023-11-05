@@ -3,7 +3,9 @@ import json
 import os
 import random
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+from PIL import Image
+
+from toolkit import *
 
 
 def do_gen(
@@ -32,9 +34,6 @@ def do_gen(
 
         img_bg = Image.open(fullpath_scene)
         img_ip = Image.open(fullpath_ip)
-        # 获取背景图片的宽度和高度
-        bg_width, bg_height = img_bg.size
-        # 获取要添加的图片的宽度和高度
 
         # 1、随机旋转
         img_ip_processed = rotate_img(img_ip)
@@ -46,11 +45,12 @@ def do_gen(
         img_ip_processed = effect_img(img_ip_processed)
 
         # 4、将要添加的图片粘贴到背景图片的随机位置
+        img_bg = paste_img(img_bg, img_ip_processed)
+
+        # 获取背景图片的宽度和高度
+        bg_width, bg_height = img_bg.size
+        # 获取要添加的图片的宽度和高度
         ip_width, ip_height = img_ip_processed.size
-        x = random.randint(0, bg_width - ip_width)
-        y = random.randint(0, bg_height - ip_height)
-        #
-        img_bg.paste(img_ip_processed, (x, y), img_ip_processed)
 
         # 保存合成后的图片
         img_bg = img_bg.convert("RGB")
@@ -82,7 +82,11 @@ def do_gen(
     coco_format_json = dict(
         images=images,
         annotations=annotations,
-        categories=[{"id": 0, "name": "jiaojiao"}],
+        categories=[
+            {"id": 0, "name": "叫叫"},
+            {"id": 1, "name": "猪小弟"},
+            {"id": 2, "name": "铃铛"},
+        ],
     )
     with open(f"{dir_dist}/{gen_type}.json", "w", encoding="utf8") as json_file:
         json.dump(coco_format_json, json_file)
@@ -90,47 +94,8 @@ def do_gen(
     return i_anno
 
 
-def resize_img(img_in):
-    scale_factor = random.uniform(0.7, 1.3)
-    new_width = int(img_in.width * scale_factor)
-    new_height = int(img_in.height * scale_factor)
-    return img_in.resize((new_width, new_height))
-
-
-def rotate_img(img_in):
-    rotation_angle = random.randint(-30, 30)
-    return img_in.rotate(rotation_angle, expand=True)
-
-
-# 一定程度模糊、遮挡、变色
-def effect_img(img_in):
-    img_processed = img_in
-    if random.randint(0, 100) > 80:
-        img_processed = img_processed.filter(ImageFilter.BLUR)
-
-    if random.randint(0, 100) > 90:
-        width, height = img_processed.size
-
-        draw = ImageDraw.Draw(img_processed)
-        scale_factor = random.uniform(2, 5)
-        wDraw = int(width / scale_factor)
-        hDraw = int(height / scale_factor)
-
-        x1 = random.randint(0, width - wDraw)  # 遮挡矩形左上角 x 坐标
-        y1 = random.randint(0, height - hDraw)  # 遮挡矩形左上角 y 坐标
-        x2 = x1 + wDraw  # 遮挡矩形右下角 x 坐标
-        y2 = y1 + hDraw  # 遮挡矩形右下角 y 坐标
-        draw.rectangle((x1, y1, x2, y2), fill="black")
-
-    if random.randint(0, 100) > 80:
-        enhancer = ImageEnhance.Color(img_processed)
-        img_processed = enhancer.enhance(2.0)
-
-    return img_processed
-
-
 if __name__ == "__main__":
-    dir_dist = r"./data/jiao2"
+    dir_dist = r"./data/jiao"
     do_gen(
         dir_ip=r"D:\data\ai\jiao\V1\IP\叫叫",
         dir_scene=r"D:\data\ai\jiao\V1\scene\场景",
@@ -138,7 +103,7 @@ if __name__ == "__main__":
         gen_type="train",
         i_img=1,
         i_anno=1,
-        n=300,
+        n=1,
     )
     do_gen(
         dir_ip=r"D:\data\ai\jiao\V1\IP\叫叫",
@@ -147,5 +112,5 @@ if __name__ == "__main__":
         gen_type="val",
         i_img=1,
         i_anno=1,
-        n=300,
+        n=1,
     )
